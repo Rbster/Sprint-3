@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 import kotlin.random.Random
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class CertificateRequestTest {
     // given
     private val certificateType : CertificateType = mockk<CertificateType>(relaxed = true)
@@ -18,7 +20,14 @@ internal class CertificateRequestTest {
 
     @BeforeAll
     fun setOn() {
-        Random(seed)
+        var Random = Random(seed)
+    }
+
+    @Test
+    fun getRandom() {
+        println(Random(seed).nextLong(5000L, 15000L))
+        println(Random(seed).nextLong(5000L, 15000L))
+
     }
 
 

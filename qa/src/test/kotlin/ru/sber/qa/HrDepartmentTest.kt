@@ -17,9 +17,11 @@ internal class HrDepartmentTest {
     private val hrEmployeeNumber: Long = 21L
 
 
+
     @Test
     fun receiveRequest_doesNotThrowOnOddDays() {
         // given
+
         every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
 
         // then
