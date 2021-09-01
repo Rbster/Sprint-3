@@ -15,74 +15,91 @@ internal class HrDepartmentTest {
     private val hrEmployeeNumber: Long = 21L
 
     @Test
-    fun receiveRequest_doesNotThrowOnOddDays() {
+    fun receiveRequest_throwsOnWeekend() {
         // given
+        // Saturday
         HrDepartment.clock = Clock.fixed(
-            Instant.parse("2021-08-30T10:00:00Z")
+            Instant.parse("2021-09-04T10:00:00Z")
             , ZoneOffset.UTC)
-
         every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
 
         // then
-        when(LocalDateTime.now(Clock.systemUTC()).dayOfWeek) {
-            in listOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY) -> org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
-            in listOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY) -> assertDoesNotThrow { HrDepartment.receiveRequest(certificateRequest) }
-            in listOf(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY) -> org.junit.jupiter.api.assertThrows<WeekendDayException> { HrDepartment.receiveRequest(certificateRequest) }
-        }
+            org.junit.jupiter.api.assertThrows<WeekendDayException> { HrDepartment.receiveRequest(certificateRequest) }
+    }
+
+    @Test
+    fun receiveRequest_throwsOnOddDays() {
+        // given
+        // Wednesday
+        HrDepartment.clock = Clock.fixed(
+            Instant.parse("2021-09-01T10:00:00Z")
+            , ZoneOffset.UTC)
+        every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
+
+        // then
+        org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
+    }
+
+
+
+    @Test
+    fun receiveRequest_throwsOnEvenDays() {
+        // given
+        // Tuesday
+        HrDepartment.clock = Clock.fixed(
+            Instant.parse("2021-08-31T10:00:00Z")
+            , ZoneOffset.UTC)
+        every { certificateRequest.certificateType } returns CertificateType.NDFL
+
+        // then
+        org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
+
+    }
+
+    @Test
+    fun receiveRequest_doesNotThrowOnOddDays() {
+        // given
+        // Tuesday
+        HrDepartment.clock = Clock.fixed(
+            Instant.parse("2021-08-31T10:00:00Z")
+            , ZoneOffset.UTC)
+        every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
+
+        // then
+        assertDoesNotThrow { HrDepartment.receiveRequest(certificateRequest) }
+
 
     }
 
     @Test
     fun receiveRequest_doesNotThrowOnEvenDays() {
         // given
+        // Wednesday
+        HrDepartment.clock = Clock.fixed(
+            Instant.parse("2021-09-01T10:00:00Z")
+            , ZoneOffset.UTC)
         every { certificateRequest.certificateType } returns CertificateType.NDFL
 
         // then
-        when(LocalDateTime.now(Clock.systemUTC()).dayOfWeek) {
-            in listOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY) -> org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
-            in listOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY) -> assertDoesNotThrow { HrDepartment.receiveRequest(certificateRequest) }
-            in listOf(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY) -> org.junit.jupiter.api.assertThrows<WeekendDayException> { HrDepartment.receiveRequest(certificateRequest) }
-        }
-
+        assertDoesNotThrow { HrDepartment.receiveRequest(certificateRequest) }
     }
 
     @Test
     fun processNextRequest_doesNotThrowOnEvenDays() {
         // given
+        HrDepartment.clock = Clock.fixed(
+            Instant.parse("2021-09-01T10:00:00Z")
+            , ZoneOffset.UTC)
         every { certificateRequest.certificateType } returns CertificateType.NDFL
         every { certificateRequest.process(hrEmployeeNumber) } returns certificate
 
-        if (LocalDateTime.now(Clock.systemUTC()).dayOfWeek in listOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY)) {
-                // when
-                HrDepartment.receiveRequest(certificateRequest)
-                // then
-                assertDoesNotThrow { HrDepartment.processNextRequest(21) }
+        // when
+        HrDepartment.receiveRequest(certificateRequest)
 
-        } else {
-            // then
-            org.junit.jupiter.api.assertThrows<Exception> { HrDepartment.processNextRequest(21) }
-        }
-
+        // then
+        assertDoesNotThrow { HrDepartment.processNextRequest(21) }
     }
 
-    @Test
-    fun processNextRequest_doesNotThrowOnOddDays() {
-        // given
-        every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
-        every { certificateRequest.process(hrEmployeeNumber) } returns certificate
-
-        if (LocalDateTime.now(Clock.systemUTC()).dayOfWeek in listOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY)) {
-            // when
-            HrDepartment.receiveRequest(certificateRequest)
-            // then
-            assertDoesNotThrow { HrDepartment.processNextRequest(hrEmployeeNumber) }
-
-        } else {
-            // then
-            org.junit.jupiter.api.assertThrows<Exception> { HrDepartment.processNextRequest(21) }
-        }
-
-    }
 
 
 }
