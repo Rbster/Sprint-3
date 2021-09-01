@@ -10,7 +10,6 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.random.Random
 
 internal class ScannerTest {
-
     @Test
     fun getScanData_throws() {
         // given

@@ -13,8 +13,6 @@ internal class CertificateRequestTest {
     private val hrEmployeeNumber = 12L
     private val data = byteArrayOfInts(0xFA, 0xCE)
 
-
-
     @Test
     fun process() {
         // given

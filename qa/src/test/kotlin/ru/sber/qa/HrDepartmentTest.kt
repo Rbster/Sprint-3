@@ -10,7 +10,6 @@ import java.time.*
 internal class HrDepartmentTest {
     private val certificateRequest = mockk<CertificateRequest>()
     private val certificate = mockk<Certificate>()
-
     private val hrEmployeeNumber: Long = 21L
 
     @BeforeEach
