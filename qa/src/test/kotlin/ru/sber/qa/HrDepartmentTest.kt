@@ -1,18 +1,28 @@
 package ru.sber.qa
 
-import io.mockk.every
-import io.mockk.mockk
-import org.junit.jupiter.api.Test
+import io.mockk.*
+import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
 import java.time.*
-import kotlin.random.Random
+
 
 internal class HrDepartmentTest {
-    private val certificateRequest : CertificateRequest = mockk<CertificateRequest>()
-    private val certificate: Certificate = mockk<Certificate>()
+    private val certificateRequest = mockk<CertificateRequest>()
+    private val certificate = mockk<Certificate>()
+
     private val hrEmployeeNumber: Long = 21L
+
+    @BeforeEach
+    fun setUp() {
+        mockkObject(CertificateType.LABOUR_BOOK)
+        mockkObject(CertificateType.NDFL)
+    }
+
+    @AfterEach
+    fun unMock() {
+        unmockkAll()
+    }
 
     @Test
     fun receiveRequest_throwsOnWeekend() {
@@ -24,7 +34,9 @@ internal class HrDepartmentTest {
         every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
 
         // then
-            org.junit.jupiter.api.assertThrows<WeekendDayException> { HrDepartment.receiveRequest(certificateRequest) }
+        assertThrows<WeekendDayException> { HrDepartment.receiveRequest(certificateRequest) }
+
+
     }
 
     @Test
@@ -37,7 +49,7 @@ internal class HrDepartmentTest {
         every { certificateRequest.certificateType } returns CertificateType.LABOUR_BOOK
 
         // then
-        org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
+        assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
     }
 
 
@@ -52,7 +64,7 @@ internal class HrDepartmentTest {
         every { certificateRequest.certificateType } returns CertificateType.NDFL
 
         // then
-        org.junit.jupiter.api.assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
+        assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
 
     }
 
