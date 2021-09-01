@@ -17,10 +17,12 @@ data class User(val name: String, val age: Long) {
 
 fun main() {
     val user1 = User("Alex", 13)
-    // user2
+
+    //TODO: user2
     val user2 = user1.copy(name = "Pavel")
     println("user2 is $user2")
-    // user3
+
+    //TODO: user3
     user1.city = "Omsk"
     val user3 = user1.copy()
     user3.city = "Tomsk"
