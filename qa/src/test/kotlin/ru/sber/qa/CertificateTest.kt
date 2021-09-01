@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 
 internal class CertificateTest {
     // given
-    private val certificateRequest : CertificateRequest = mockk<CertificateRequest>(relaxed = true)
+    private val certificateRequest = mockk<CertificateRequest>(relaxed = true)
     private val processedBy = 123L
     private val data = byteArrayOfInts(0xFA, 0xCE)
     private val certificate = Certificate(certificateRequest, processedBy, data)

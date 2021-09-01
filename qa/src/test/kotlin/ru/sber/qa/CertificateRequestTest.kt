@@ -4,17 +4,14 @@ import io.mockk.*
 import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import kotlin.random.Random
 
 internal class CertificateRequestTest {
     // given
-    private val certificateType : CertificateType = mockk<CertificateType>(relaxed = true)
+    private val certificateType = mockk<CertificateType>(relaxed = true)
     private val employeeNumber = 123L
     private val certificateRequest = CertificateRequest(employeeNumber, certificateType)
     private val hrEmployeeNumber = 12L
     private val data = byteArrayOfInts(0xFA, 0xCE)
-
-    private val seed: Long = 123L
 
 
 
