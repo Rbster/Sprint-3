@@ -30,7 +30,7 @@ internal class ScannerTest {
         every { Random.nextBytes(100) } returns data
 
         // then
-        assertEquals(data ,Scanner.getScanData())
+        assertEquals(data, Scanner.getScanData())
         unmockkAll()
     }
 }
