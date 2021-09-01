@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import java.time.*
 
-
 internal class HrDepartmentTest {
     private val certificateRequest = mockk<CertificateRequest>()
     private val certificate = mockk<Certificate>()
@@ -51,8 +50,6 @@ internal class HrDepartmentTest {
         assertThrows<NotAllowReceiveRequestException> { HrDepartment.receiveRequest(certificateRequest) }
     }
 
-
-
     @Test
     fun receiveRequest_throwsOnEvenDays() {
         // given
@@ -96,7 +93,7 @@ internal class HrDepartmentTest {
     }
 
     @Test
-    fun processNextRequest_doesNotThrowOnEvenDays() {
+    fun processNextRequest_doesNotThrow() {
         // given
         HrDepartment.clock = Clock.fixed(
             Instant.parse("2021-09-01T10:00:00Z")
@@ -108,9 +105,6 @@ internal class HrDepartmentTest {
         HrDepartment.receiveRequest(certificateRequest)
 
         // then
-        assertDoesNotThrow { HrDepartment.processNextRequest(21) }
+        assertDoesNotThrow { HrDepartment.processNextRequest(hrEmployeeNumber) }
     }
-
-
-
 }

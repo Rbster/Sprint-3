@@ -21,7 +21,7 @@ internal class ScannerTest {
     }
 
     @Test
-    fun getScanData_doesNotThrow() {
+    fun getScanData() {
         // given
         mockkObject(Random)
         val data = byteArrayOf(1)
