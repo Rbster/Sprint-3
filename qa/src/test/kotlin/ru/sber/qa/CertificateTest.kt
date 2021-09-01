@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 internal class CertificateTest {
-    private fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
-
     // given
     private val certificateRequest : CertificateRequest = mockk<CertificateRequest>(relaxed = true)
     private val processedBy = 123L

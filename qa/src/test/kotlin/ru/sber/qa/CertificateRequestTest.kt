@@ -1,40 +1,39 @@
 package ru.sber.qa
 
-import io.mockk.mockk
-import org.junit.jupiter.api.Test
+import io.mockk.*
+import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
 import kotlin.random.Random
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class CertificateRequestTest {
     // given
     private val certificateType : CertificateType = mockk<CertificateType>(relaxed = true)
     private val employeeNumber = 123L
     private val certificateRequest = CertificateRequest(employeeNumber, certificateType)
     private val hrEmployeeNumber = 12L
+    private val data = byteArrayOfInts(0xFA, 0xCE)
 
     private val seed: Long = 123L
 
-    @BeforeAll
-    fun setOn() {
-        var Random = Random(seed)
-    }
-
-    @Test
-    fun getRandom() {
-        println(Random(seed).nextLong(5000L, 15000L))
-        println(Random(seed).nextLong(5000L, 15000L))
-
-    }
 
 
     @Test
     fun process() {
+        // given
+        mockkObject(Scanner)
+        mockkConstructor(Certificate::class)
+        every { Scanner.getScanData() } returns data
+
+        // when
+        val certificate = certificateRequest.process(hrEmployeeNumber)
+
         // then
-        assertDoesNotThrow { certificateRequest.process(hrEmployeeNumber) }
+        assertEquals(data, certificate.data)
+        assertEquals(hrEmployeeNumber, certificate.processedBy)
+        assertEquals(certificateRequest, certificate.certificateRequest)
+
+        unmockkAll()
     }
 
     @Test
