@@ -1,6 +1,7 @@
 package ru.sber.io
 
 import java.io.File
+import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
@@ -31,16 +32,15 @@ class Archivator {
     fun zipLogfile() {
         val bufLen = 1024
         var buffer: ByteArray
-        logFile.inputStream().use {
-                input ->
-                    ZipOutputStream(zippedLogFile.outputStream()).use {
-                            output ->
-                                do {
-                                    buffer = input.readNBytes(bufLen)
-                                    output.write(buffer)
-                                } while(buffer.isNotEmpty())
-                    }
-         }
+        logFile.inputStream().use { input ->
+            ZipOutputStream(zippedLogFile.outputStream()).use { output ->
+                output.putNextEntry(ZipEntry(logFileName))
+                do {
+                buffer = input.readNBytes(bufLen)
+                output.write(buffer)
+                } while(buffer.isNotEmpty())
+            }
+        }
     }
 
     /**
@@ -50,15 +50,14 @@ class Archivator {
     fun unzipLogfile() {
         val bufLen = 1024
         var buffer: ByteArray
-        ZipInputStream(zippedLogFile.inputStream()).use {
-                input ->
-                    unzippedLogFile.outputStream().use {
-                            output ->
-                                do {
-                                    buffer = input.readNBytes(bufLen)
-                                    output.write(buffer)
-                                } while(buffer.isNotEmpty())
-                    }
+        ZipInputStream(zippedLogFile.inputStream()).use { input ->
+            input.nextEntry
+            unzippedLogFile.outputStream().use { output ->
+                do {
+                    buffer = input.readNBytes(bufLen)
+                    output.write(buffer)
+                } while(buffer.isNotEmpty())
+            }
         }
     }
 }
