@@ -13,7 +13,7 @@ import kotlin.io.path.useLines
  * Реализовать простой аналог утилиты grep с использованием калссов из пакета java.nio.
  */
 class Grep {
-    private val resultPath = Paths.get("result")
+    private val resultPath = Paths.get("result.txt")
     val searchPath = Paths.get("logs")
     private val result
         get() = if (resultPath.exists()) resultPath.toFile() else resultPath.createFile().toFile()
@@ -36,6 +36,7 @@ class Grep {
             .filter { s -> s.contains(subString) }
             .mapIndexed { index, s -> "${path.fileName} : $index : $s" }
             .joinToString(separator = "\n") } }
+        .filter { it.isNotBlank() && !it.isNullOrEmpty() }
         .collect(Collectors.joining("\n"))
         .byteInputStream()
         .use { inputStream ->
