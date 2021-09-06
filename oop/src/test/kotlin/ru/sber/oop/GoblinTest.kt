@@ -23,8 +23,6 @@ internal class GoblinTest {
         unmockkAll()
     }
 
-
-
     @Test
     fun `Mathew attacks Jonathan`() {
         every { Random.nextInt() } returns roll
