@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 internal class GoblinTest {
-    val gobJonathan = Goblin("Jonathan", "Your average gob", "meanness", 500)
-    val gobMathew = Goblin("Mathew", "Like waffles", "gluttony", 300)
-    val roll = 300
+    private val gobJonathan = Goblin("Jonathan", "Your average gob", "meanness", 500)
+    private val gobMathew = Goblin("Mathew", "Like waffles", "gluttony", 300)
+    private val roll = 300
     @BeforeEach
     fun setUp() {
         mockkObject(Random)
