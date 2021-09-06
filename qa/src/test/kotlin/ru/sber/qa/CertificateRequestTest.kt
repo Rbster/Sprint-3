@@ -13,10 +13,19 @@ internal class CertificateRequestTest {
     private val hrEmployeeNumber = 12L
     private val data = byteArrayOfInts(0xFA, 0xCE)
 
+    @BeforeEach
+    fun setUp() {
+        mockkObject(Scanner)
+    }
+
+    @AfterEach
+    fun unMock() {
+        unmockkAll()
+    }
+
     @Test
     fun process() {
         // given
-        mockkObject(Scanner)
         mockkConstructor(Certificate::class)
         every { Scanner.getScanData() } returns data
 
@@ -28,7 +37,6 @@ internal class CertificateRequestTest {
         assertEquals(hrEmployeeNumber, certificate.processedBy)
         assertEquals(certificateRequest, certificate.certificateRequest)
 
-        unmockkAll()
     }
 
     @Test
