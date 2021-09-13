@@ -1,8 +1,8 @@
 package ru.sber.nio
 
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
 import java.util.stream.Collectors
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
@@ -14,7 +14,7 @@ import kotlin.io.path.useLines
  */
 class Grep {
     private val resultPath = Paths.get("result.txt")
-    val searchPath = Paths.get("logs")
+    private val searchPath: Path = Paths.get("logs")
     private val result
         get() = if (resultPath.exists()) resultPath.toFile() else resultPath.createFile().toFile()
 
@@ -33,8 +33,9 @@ class Grep {
     fun find(subString: String) = Files.walk(searchPath)
         .filter { path -> path.isRegularFile() }
         .map { path -> path.useLines { it
-            .filter { s -> s.contains(subString) }
-            .mapIndexed { index, s -> "${path.fileName} : $index : $s" }
+            .mapIndexed { index, s -> Pair(index, s) }
+            .filter { p -> p.second.contains(subString) }
+            .map { p -> "${path.fileName} : ${p.first + 1} : ${p.second}" }
             .joinToString(separator = "\n") } }
         .filter { it.isNotBlank() && !it.isNullOrEmpty() }
         .collect(Collectors.joining("\n"))
